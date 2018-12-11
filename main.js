@@ -2,7 +2,7 @@ import React from 'react';
 import Expo, { AppLoading, Asset, Font } from 'expo';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { StyleSheet,View, Image, Dimensions } from 'react-native';
-import { DrawerNavigator, DrawerItems } from 'react-navigation';
+import { DrawerNavigator, DrawerItems  } from 'react-navigation';
 
 import Components from './src/drawer/components';
 import Ratings from './src/drawer/ratings';
@@ -42,7 +42,7 @@ const MainRoot = DrawerNavigator(
       path: '/profile',
       screen: Profile,
     },
-    Lists: {
+    Articles: {
       path: '/lists',
       screen: Lists,
     },
@@ -64,7 +64,7 @@ const MainRoot = DrawerNavigator(
     },
   },
   {
-    initialRouteName: 'Lists',
+    initialRouteName: 'Articles',
     contentOptions: {
       activeTintColor: '#548ff7',
       activeBackgroundColor: 'transparent',

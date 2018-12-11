@@ -73,14 +73,14 @@ export default class ListsScreen1 extends Component {
 
   renderCard(l, index) {
     const { Author, avatar } = l;
-
+    const navigator = this.props.navigation;
     return (
       <View key={index} style={{ height: 60, marginHorizontal: 20, marginTop: 10, backgroundColor: 'white', borderRadius: 5}}>
           <View >
             <ListItem
               leftAvatar={{ rounded: true, source: { uri: l.avatar_url } }}
               key={index}
-              onPress={console.log('pressed')}
+              onPress={()=>navigator.navigate('ArticleDetail')}
               title={l.title}
               subtitle={l.Author}
               chevron
@@ -100,7 +100,7 @@ export default class ListsScreen1 extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         {this.state.fontLoaded ?
           <View style={{ flex: 1, backgroundColor: 'rgba(241,240,241,1)' }}>
             <View style={styles.statusBar} />
@@ -109,18 +109,17 @@ export default class ListsScreen1 extends Component {
                 Review
               </Text>
             </View>
-            <ScrollView style={{ flex: 1, marginBottom: 20 }}>
-              <View style={{flex: 1, flexDirection: 'column', backgroundColor: 'white', borderRadius: 5, alignItems: 'center', marginHorizontal: 10, height: 250, marginBottom: 10}}>
+            <View style={{flex: 0.5, flexDirection: 'column', backgroundColor: 'white', borderRadius: 5, alignItems: 'center', marginHorizontal: 10, height: 250, marginBottom: 10}}>
                 <View style={{flex: 3, flexDirection: 'row'}}>
                   <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <Avatar
-                      width={145}
-                      height={145}
+                      width={105}
+                      height={105}
                       source={{
                         uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/jsa/128.jpg',
                       }}
                       activeOpacity={0.7}
-                      avatarStyle={{borderRadius: 145/2}}
+                      avatarStyle={{borderRadius: 105/2}}
                       overlayContainerStyle={{backgroundColor: 'transparent'}}
                     />
                   </View>
@@ -154,6 +153,8 @@ export default class ListsScreen1 extends Component {
                   </View>
                 </View>
               </View>
+            <ScrollView style={{ flex: 2, marginBottom: 20 }}>
+              
               {this.renderListCards()}
             </ScrollView>
           </View> :
@@ -185,5 +186,9 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontFamily: 'regular',
     marginLeft: 20
+  },
+  container: {
+    flex: 1,
+    backgroundColor: 'black'
   }
 });
