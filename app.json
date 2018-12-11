@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "react-native-elements-app",
+    "description": "A demo app for React Native Elements UI Library",
+    "slug": "react-native-elements-app",
+    "privacy": "public",
+    "sdkVersion": "26.0.0",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "primaryColor": "#cccccc",
+    "icon": "./assets/icons/icon.png",
+    "splash": {
+      "image": "./assets/icons/loading.png"
+    },
+    "packagerOpts": {
+      "assetExts": [
+        "ttf",
+        "mp4"
+      ],
+      "config": "rn-cli.config.js"
+    },
+    "ios": {
+      "supportsTablet": true
+    }
+  }
+}
