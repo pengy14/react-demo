@@ -30,8 +30,8 @@ request body:
 ```
 {
   "editor":{
-     "editorName":"editor", // cheif editor默认admin
-     "password":"bpmbpmbpm", // cheif editor默认admin
+     "editorName":"editor", // cheif editor default admin
+     "password":"bpmbpmbpm", // cheif editor default admin
   }
 }
 ```
