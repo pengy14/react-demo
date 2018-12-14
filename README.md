@@ -42,7 +42,8 @@ request body:
 
 return example:
 ```
-  {
+  {   
+     "statusCode": 200,
      "reviewList":[{
      "id":123456789,
      "title":"title1",
@@ -85,6 +86,7 @@ request body example:
 return example:
 ```
 {     
+    "statusCode":200,
     "editors":["editorName1","editorName2",...]
 }
 ```
@@ -99,6 +101,18 @@ request body example:
       "id":123456789,
       "editor1ID":123456,
       "editor2ID":654321
+  }
+}
+```
+
+## All successful request should return a JsonObj with a statusCode 200 in its body,wheras error should return a JsonObj as below 
+
+### failed request
+```
+{
+  "error":{
+     "statusCode": 400 // e.g.
+     "description":"an connection err has occured" // e.g.
   }
 }
 ```
