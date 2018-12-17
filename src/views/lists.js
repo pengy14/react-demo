@@ -8,7 +8,17 @@ import ArticleDetail from './lists/articleDetail'
 const routeConfigs = {
   Home: {
     screen: ListsScreen1,
-    path: './lists/screen1'
+    path: './lists/screen1',
+    navigationOptions: {
+      headerTitle:'Review',
+      headerTitleStyle:{
+        color: 'black',
+        fontSize: 25,
+        fontFamily: 'regular',
+        marginLeft: 20,
+        fontWeight:'bold'
+      }
+    }
   },
   ArticleDetail: {
     screen: ArticleDetail,
@@ -25,7 +35,9 @@ const MainRoot = StackNavigator(routeConfigs,stackNavigatorConfig);
 const test = () => <View>Hello</View>
 
 export default class Lists extends Component {
+
   render() {
+    // console.log(`get screen ${this.props.screenProps}`);
     return (
       // <View style={styles.container}>
       //   <ScrollView
@@ -36,8 +48,8 @@ export default class Lists extends Component {
       //     <ListsScreen1 />
       //   </ScrollView>
 
-      // </View>       
-      <MainRoot />
+      // </View>   
+      <MainRoot screenProps = {this.props.screenProps}/>
 
     );
   }

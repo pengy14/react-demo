@@ -3,6 +3,7 @@ import Expo, { AppLoading, Asset, Font } from 'expo';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { StyleSheet,View, Image, Dimensions } from 'react-native';
 import { DrawerNavigator, DrawerItems  } from 'react-navigation';
+import autobind from 'class-autobind';
 
 import Components from './src/drawer/components';
 import Ratings from './src/drawer/ratings';
@@ -65,6 +66,7 @@ const MainRoot = DrawerNavigator(
   },
   {
     initialRouteName: 'Articles',
+    // initialRouteParams: this.props.screenProps,
     contentOptions: {
       activeTintColor: '#548ff7',
       activeBackgroundColor: 'transparent',
@@ -107,15 +109,22 @@ export default class AppContainer extends React.Component {
     super(props);
     this.state = {
       isReady: false,
-      isLoginedin: false
+      isLoginedin: false,
+      isChief: false,
+      editorID:0
     };
 
-    this.changeLogin = this.changeLogin.bind(this);
+    autobind(this);
   }
 
 
   changeLogin() {
     this.setState({ isLoginedin: !this.state.isLoginedin });
+  }
+
+  checkChief(isChief,editorID){
+    console.log(`main editorID ${editorID}`);
+    this.setState({isChief : isChief,editorID:editorID});
   }
 
   async _loadAssetsAsync() {
@@ -150,8 +159,8 @@ export default class AppContainer extends React.Component {
 
     return (
       <View style={styles.container}>
-        {!loginedIn && <LoginEntry changeLogin={this.changeLogin} />}
-        {loginedIn && <MainRoot />}
+        {!loginedIn && <LoginEntry changeLogin={this.changeLogin} checkChief = {this.checkChief}/>}
+        {loginedIn && <MainRoot screenProps = {{isChief:this.state.isChief,editorID:this.state.editorID}}/>}
       </View>
     );
   }

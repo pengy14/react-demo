@@ -90,7 +90,7 @@ export default class LoginScreen2 extends Component {
     return re.test(email);
   }
 
- async login() {
+  async login() {
     const {
       name,
       email,
@@ -110,25 +110,42 @@ export default class LoginScreen2 extends Component {
     console.log(`username ffff ${name}`)
     console.log(`${baseUrl}1544344751850`);
     console.log(password);
-    // const result = await axios({
-    //   method: 'post',
-    //   url: `http://149.248.14.120/api/users/login`,
-    //   data: {
-    //     user:{
-    //       username:name,
-    //       password:password
-    //     }
-    //   }
-    // });
-    
-    
-    // console.log('2222');
-    // console.log(result.data);
-    // if(result.data.user.id!==''){
-    //   console.log('pwd eq');
-      this.props.changeLogin();
-    // }
+    try{
+    const result = await axios({
+      method: 'post',
+      url: `http://45.76.75.242/api/editor/login`,
+      data: {
 
+        "editor": {
+          "editorname": name,
+          "password": password
+        }
+      }
+
+    });
+    console.log(result.data);
+    if(result.data.statuscode===200){
+      console.log('pwd eq');
+      if(password==='admin'){
+        this.props.checkChief(true,result.data.editor.id);
+      }
+    this.props.changeLogin();
+    }
+  }catch(error){
+    console.log(`handle error`);
+    console.log(error);
+      this.setState({isPasswordValid:false});
+  }
+
+
+    // console.log('2222');
+   
+   
+
+    //TODO
+    if (true) {
+      
+    }
 
     // if(result.data.password===password){
     //   console.log('pwd eq');
@@ -161,7 +178,7 @@ export default class LoginScreen2 extends Component {
     console.log(result.data);
     if (result.data.type === 'user') {
       console.log('ininiin');
-      this.setState({ selectedCategory: 0 ,isLoading:false});      
+      this.setState({ selectedCategory: 0, isLoading: false });
     }
 
   }
@@ -247,30 +264,31 @@ export default class LoginScreen2 extends Component {
                   // errorMessage={isEmailValid ? null : 'Please enter a valid email address'}
                   />
 
-                  <Input
-                    leftIcon={
-                      <Icon
-                        name='envelope-o'
-                        color='rgba(0, 0, 0, 0.38)'
-                        size={25}
-                        style={{ backgroundColor: 'transparent' }}
-                      />
-                    }
-                    value={email}
-                    keyboardAppearance='light'
-                    autoFocus={false}
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    keyboardType='email-address'
-                    returnKeyType='next'
-                    inputStyle={{ marginLeft: 10 }}
-                    placeholder={'Email'}
-                    containerStyle={{ borderBottomColor: 'rgba(0, 0, 0, 0.38)' }}
-                    // ref={input => this.emailInput = input}
-                    onSubmitEditing={() => this.passwordInput.focus()}
-                    onChangeText={email => this.setState({ email })}
-                    errorMessage={isEmailValid ? null : 'Please enter a valid email address'}
-                  />
+                  {isSignUpPage &&
+                    <Input
+                      leftIcon={
+                        <Icon
+                          name='envelope-o'
+                          color='rgba(0, 0, 0, 0.38)'
+                          size={25}
+                          style={{ backgroundColor: 'transparent' }}
+                        />
+                      }
+                      value={email}
+                      keyboardAppearance='light'
+                      autoFocus={false}
+                      autoCapitalize='none'
+                      autoCorrect={false}
+                      keyboardType='email-address'
+                      returnKeyType='next'
+                      inputStyle={{ marginLeft: 10 }}
+                      placeholder={'Email'}
+                      containerStyle={{ borderBottomColor: 'rgba(0, 0, 0, 0.38)' }}
+                      // ref={input => this.emailInput = input}
+                      onSubmitEditing={() => this.passwordInput.focus()}
+                      onChangeText={email => this.setState({ email })}
+                      errorMessage={isEmailValid ? null : 'Please enter a valid email address'}
+                    />}
 
                   <Input
                     leftIcon={
@@ -294,7 +312,7 @@ export default class LoginScreen2 extends Component {
                     // ref={input => this.passwordInput = input}
                     onSubmitEditing={() => isSignUpPage ? this.confirmationInput.focus() : this.login()}
                     onChangeText={(password) => this.setState({ password })}
-                    errorMessage={isPasswordValid ? null : 'Please enter at least 8 characters'}
+                    errorMessage={isPasswordValid ? null : 'Please enter correct password or username'}
                   />
 
                   {isSignUpPage &&

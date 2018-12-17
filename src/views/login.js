@@ -20,7 +20,7 @@ export default class Login extends Component {
           pagingEnabled
           decelerationRate={1}
         > */}
-          <LoginScreen3 changeLogin={this.props.changeLogin}/>
+          <LoginScreen3 changeLogin={this.props.changeLogin} checkChief = {this.props.checkChief}/>
         {/* </ScrollView> */}
       </View>
     );
