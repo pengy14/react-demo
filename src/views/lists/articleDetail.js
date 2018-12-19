@@ -2,9 +2,47 @@ import Expo from 'expo';
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import Textarea from 'react-native-textarea';
-import { Button, ButtonGroup } from 'react-native-elements';
+import { Button, ButtonGroup, Input } from 'react-native-elements';
 import autobind from 'class-autobind';
 import Modal from 'react-native-modalbox';
+import _ from 'lodash';
+
+const axios = require('axios');
+const baseUrl = 'http://45.76.75.242/api/';
+
+class CustomButton extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      selected: false,
+      // index:0
+    };
+  }
+
+  componentDidMount() {
+    const { selected } = this.props;
+
+    this.setState({
+      selected
+    });
+  }
+
+  render() {
+    const { title } = this.props;
+    const { selected } = this.state;
+
+    return (
+      <Button
+        title={title}
+        titleStyle={{ fontSize: 15, color: 'white', fontFamily: 'regular' }}
+        buttonStyle={{ backgroundColor: 'rgba(213, 100, 140, 1)', borderRadius: 100, width: 100 }}
+        containerStyle={{ marginRight: 10, marginTop: 5 }}
+      // onPress={() => this.setState({ selected: !selected })}
+      />
+    );
+  }
+}
 
 class articleDetail extends Component {
   constructor(props) {
@@ -15,26 +53,55 @@ class articleDetail extends Component {
       isReview: false,
       isTag: false,
       isModalOpen: false,
-      position: 'center'
+      position: 'center',
+      trust: '0',
+      tagList: ['none']
     }
 
     autobind(this);
   }
 
+  onChange() {
+    this.setState()
+  }
+
   renderComment() {
+    let comment = '';
+    let trust = '0';
     return (
       <View style={styles.container}>
         <Textarea
           containerStyle={styles.textareaContainer}
+          value={comment}
           style={styles.textarea}
           padding={10}
-          onChangeText={this.onChange}
+          onChangeText={comment => this.setState({ text: comment })}
           defaultValue={this.state.text}
           maxLength={120}
           placeholder={'好玩有趣的，大家同乐，伤感忧闷的，大家同哭。。。'}
           placeholderTextColor={'#c7c7c7'} />
 
+        <Text>置信度:</Text>
+        <Input // username
+
+          value={trust}
+          keyboardAppearance='light'
+          autoFocus={false}
+          autoCapitalize='none'
+          autoCorrect={false}
+          keyboardType='default'
+          returnKeyType='next'
+          inputStyle={{ marginLeft: 10 }}
+          placeholder={'0-100'}
+          containerStyle={{ borderBottomColor: 'rgba(0, 0, 0, 0.38)' }}
+          // ref={input => this.emailInput = input}
+          // onSubmitEditing={() => this.passwordInput.focus()}
+          onChangeText={trust => this.setState({ trust })}
+        // errorMessage={isEmailValid ? null : 'Please enter a valid email address'}
+        />
+
         <View style={[styles.buttonsContainer, { marginBottom: 5 }]}>
+
           <Button
             title="Accept"
             buttonStyle={{ backgroundColor: 'rgba(127, 220, 103, 1)' }}
@@ -55,36 +122,170 @@ class articleDetail extends Component {
   }
 
   renderTag() {
+    let tag = this.defaultTag();
+    return (
+      <View style={styles.container}>
+        <Input // username
+          value={tag}
+          keyboardAppearance='light'
+          autoFocus={false}
+          autoCapitalize='none'
+          autoCorrect={false}
+          keyboardType='default'
+          returnKeyType='next'
+          inputStyle={{ marginLeft: 10 }}
+          placeholder={'tag'}
+          containerStyle={{ borderBottomColor: 'rgba(0, 0, 0, 0.38)' }}
+          // ref={input => this.emailInput = input}
+          // onSubmitEditing={() => this.passwordInput.focus()}
+          onChangeText={tag => this.processTag2List(tag)}
+        // errorMessage={isEmailValid ? null : 'Please enter a valid email address'}
+        />
 
+        <View style={[styles.buttonsContainer, { marginBottom: 5 }]}>
+
+          <Button
+            title="Submit"
+            buttonStyle={{ backgroundColor: 'rgba(127, 220, 103, 1)' }}
+            containerStyle={{ height: 40 }}
+            titleStyle={{ color: 'white', marginHorizontal: 20 }}
+            onPress={this.addtag}
+          />
+          <Button
+            title="Cancel"
+            buttonStyle={{ backgroundColor: 'rgba(214, 61, 57, 1)' }}
+            containerStyle={{ height: 40 }}
+            titleStyle={{ color: 'white', marginHorizontal: 20 }}
+            onPress={this.cancelTag}
+          />
+        </View>
+      </View>
+
+    )
+  }
+
+  processTag2List(tag) {
+    console.log(`processed  `)
+    const tagList = tag.split(' ');
+    this.setState({ tagList: tagList });
+  }
+
+  defaultTag() {
+    console.log(`defaultTag ${this.props.navigation.state.params.tagList.join(' ')}`);
+    console.log(`this.props.navigation.state.params.tagList  ${this.props.navigation.state.params.tagList}`);
+
+
+    return this.props.navigation.state.params.tagList.length==0?this.state.tagList:this.props.navigation.state.params.tagList;
   }
 
   accept() {
     // TODO 处理评论提交
-    this.setState({ isModalOpen: false, isReview: false });
+    // console.log('come into accept');
+    // console.log(`comment ${this.state.text}`);
+    // console.log(`faf  ${this.props.navigation.state.articleid}`);
+    const data = {
+      'review': {
+        'articleid': this.props.navigation.state.params.articleid,
+        'editorid': this.props.navigation.state.params.editorid,
+        'decision': 'accept',
+        'remark': this.state.text,
+        'trust': Number(this.state.trust)
+      }
+    }
+
+    console.log(data);
+    axios({
+      method: 'post',
+      url: `${baseUrl}editor/review`,
+      data: data
+
+    }).then(response => {
+      // console.log(response.data);
+      // this.setState({ isModalOpen: false, isReview: false });
+      // this.props.navigation.navigate('Home');
+      // this.props.navigation.dispatch(NavigationActions.back())
+      this.props.navigation.state.params.review();
+      this.props.navigation.goBack();
+    }).catch(error => {
+      console.log(error);
+    });
+
+
   }
 
   reject() {
     // TODO 处理拒绝
-    this.setState({ isModalOpen: false, isReview: false });
+    // console.log('come into accept');
+    // console.log(`comment ${this.state.text}`);
+    // console.log(`faf  ${this.props.navigation.state.articleid}`);
+    const data = {
+      'review': {
+        'articleid': this.props.navigation.state.params.articleid,
+        'editorid': this.props.navigation.state.params.editorid,
+        'decision': 'reject',
+        'remark': this.state.text,
+        'trust': Number(this.state.trust)
+      }
+    }
+
+    // console.log(data);
+    axios({
+      method: 'post',
+      url: `${baseUrl}editor/review`,
+      data: data
+
+    }).then(response => {
+      // console.log(response.data);
+      // this.props.navigation.navigate('Home');
+      this.props.navigation.state.params.review();
+      this.props.navigation.goBack();
+    }).catch(error => {
+      console.log(error);
+    });
   }
 
   openCommentModal() {
-    this.setState({ position: 'bottom', isModalOpen: true,isReview:true})
+    this.setState({ position: 'bottom', isModalOpen: true, isReview: true })
   }
 
   openTagModal() {
-    this.setState({ position: 'center', isModalOpen: true })
+    this.setState({ position: 'center', isModalOpen: true, isTag: true })
   }
 
+  addtag() {
+    // const taglist = this.state.tag.split(/[\s\n]/);
+    console.log(this.state.tagList);
+    this.setState({ isModalOpen: false });
 
+  }
+
+  cancelTag() {
+    this.setState({ isModalOpen: false });
+  }
+
+  renderArticleTag(tag,index) {
+    console.log('render single tag');
+    console.log(`tag ${tag}`)
+    return (
+        <CustomButton title={tag} selected={true}  key={index}/>
+    )
+  }
+
+  renderArticleTagLists() {
+    console.log('rendertaglisets');
+    const tagList=this.defaultTag();
+    return _.map(tagList, (tag, index) => {
+      return this.renderArticleTag(tag,index);
+    })
+  }
 
   render() {
     const { params } = this.props.navigation.state;
-    console.log(params)
+    // console.log(`params ${params.editorid}`);
     return (
       <View style={styles.container}>
         <View style={{ flex: 0.3, flexDirection: 'row', marginHorizontal: 40, justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ flex: 1, fontSize: 26, color: 'white', fontFamily: 'bold' }}>
+          <Text style={{ flex: 1, fontSize: 26, color: 'black', fontFamily: 'bold' }}>
             {params.title}
           </Text>
           <Text style={{ flex: 0.5, fontSize: 19, color: 'gray', fontFamily: 'bold', textAlign: 'right' }}>
@@ -92,19 +293,18 @@ class articleDetail extends Component {
           </Text>
         </View>
 
+        // TODO
+
+        <View style={{ flex: 0.7, flexDirection: 'column', height: 130, marginLeft: 40, marginRight: 10 }}>
+          <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
+            {this.renderArticleTagLists()}
+            {/* <CustomButton title={this.state.tagList[0]} selected={true} /> */}
+          </View>
+        </View>
+
         <ScrollView style={{ flex: 2, marginBottom: 5, padding: 20 }}>
           <Text>
-            But there is one aspect of Apple’s success in China that could mean it's spared Beijing’s wrath - even if Ms Meng finds herself extradited and even jailed.
-
-  Apple of course doesn’t just sell products to China, it makes them there. In 2017, Apple estimated that between manufacture, retail, distribution - not to mention those developing for its software - it was responsible for 4.8m jobs in China.
-
-  Further, the company has opened research centres that are providing a home in China for the country’s brightest graduates.
-
-  "They have relationships with the Chinese government because they’ve been a massive employer,” Mr Ives said, suggesting Beijing might be limited in what action it could take as result.
-
-  "By hurting Apple, it would to some extent be almost like burning down your own house."
-
-  Apple did not respond to requests for comment.
+            {params.body}
           </Text>
         </ScrollView>
 
@@ -117,13 +317,13 @@ class articleDetail extends Component {
               titleStyle={{ color: 'white', marginHorizontal: 20 }}
               onPress={this.openCommentModal}
             />
-            <Button
+            {/* <Button
               title="Tag"
               buttonStyle={{ backgroundColor: 'rgba(127, 220, 103, 1)' }}
               containerStyle={{ height: 40 }}
               titleStyle={{ color: 'white', marginHorizontal: 20 }}
               onPress={this.openTagModal}
-            />
+            /> */}
           </View>
         </View>
 
@@ -134,7 +334,7 @@ class articleDetail extends Component {
           {this.state.isTag && this.renderTag()}
         </Modal>
 
-      </View>
+      </View >
     );
   }
 }

@@ -47,22 +47,22 @@ const MainRoot = DrawerNavigator(
       path: '/lists',
       screen: Lists,
     },
-    Components: {
-      path: '/components',
-      screen: Components,
-    },
-    Ratings: {
-      path: '/ratings',
-      screen: Ratings,
-    },
-    Pricing: {
-      path: '/pricing',
-      screen: Pricing,
-    },
-    Settings: {
-      path: '/settings',
-      screen: Settings,
-    },
+    // Components: {
+    //   path: '/components',
+    //   screen: Components,
+    // },
+    // Ratings: {
+    //   path: '/ratings',
+    //   screen: Ratings,
+    // },
+    // Pricing: {
+    //   path: '/pricing',
+    //   screen: Pricing,
+    // },
+    // Settings: {
+    //   path: '/settings',
+    //   screen: Settings,
+    // },
   },
   {
     initialRouteName: 'Articles',
