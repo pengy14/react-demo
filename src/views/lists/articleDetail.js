@@ -171,8 +171,8 @@ class articleDetail extends Component {
   }
 
   defaultTag() {
-    console.log(`defaultTag ${this.props.navigation.state.params.tagList.join(' ')}`);
-    console.log(`this.props.navigation.state.params.tagList  ${this.props.navigation.state.params.tagList}`);
+    // console.log(`defaultTag ${this.props.navigation.state.params.tagList.join(' ')}`);
+    // console.log(`this.props.navigation.state.params.tagList  ${this.props.navigation.state.params.tagList}`);
 
 
     return this.props.navigation.state.params.tagList.length==0?this.state.tagList:this.props.navigation.state.params.tagList;
@@ -182,7 +182,7 @@ class articleDetail extends Component {
     // TODO 处理评论提交
     // console.log('come into accept');
     // console.log(`comment ${this.state.text}`);
-    // console.log(`faf  ${this.props.navigation.state.articleid}`);
+    console.log(`faf  ${this.props.navigation.state.params.editorid}`);
     const data = {
       'review': {
         'articleid': this.props.navigation.state.params.articleid,
@@ -264,7 +264,7 @@ class articleDetail extends Component {
   }
 
   renderArticleTag(tag,index) {
-    console.log('render single tag');
+    // console.log('render single tag');
     console.log(`tag ${tag}`)
     return (
         <CustomButton title={tag} selected={true}  key={index}/>
@@ -272,7 +272,7 @@ class articleDetail extends Component {
   }
 
   renderArticleTagLists() {
-    console.log('rendertaglisets');
+    // console.log('rendertaglisets');
     const tagList=this.defaultTag();
     return _.map(tagList, (tag, index) => {
       return this.renderArticleTag(tag,index);

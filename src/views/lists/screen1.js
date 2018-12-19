@@ -61,30 +61,40 @@ export default class ListsScreen1 extends Component {
       isModalOpen: false,
       moreThan2Editors: false,
       Articles: [],
-      avaliableEditors:[],
-      toAssignArticles:[],
-      editornames:[],
-      articleIndex:0,
-      isReviewed:false
+      avaliableEditors: [],
+      toAssignArticles: [],
+      editornames: [],
+      articleIndex: 0,
+      isReviewed: false
     };
 
     autobind(this);
 
   }
 
-  reviewed(){
+  reviewed() {
     console.log(`我被调用了 reviewd`);
-    this.setState({isReviewed:!this.state.isReviewed});
+
+    const url = `${baseUrl}editor/reviewlist?editorid=${this.props.screenProps.editorID}`;
+    axios.get(url)
+    .then(response => {
+      this.setState({ Articles: response.data.reviewlist, isReviewed: !this.state.isReviewed });
+    })
+    .catch(error => {
+      console.log(error);
+    })
+
+
   }
 
   async componentWillMount() {
     serverArticles = await this.getReviewList(this.props.screenProps.editorID);
     avaliableEditors = await this.getAvalEditor();
-    editornames = avaliableEditors.map(editor=>editor.editorname);
+    editornames = avaliableEditors.map(editor => editor.editorname);
     // name2ID = avaliableEditors.map(editor=>{this.state.name2ID[editor.editorname]=editor.id});
     // console.log(JSON.stringify(name2ID));
     this.getToAssignList();
-    this.setState({ Articles: serverArticles,avaliableEditors:avaliableEditors ,editornames:editornames});
+    this.setState({ Articles: serverArticles, avaliableEditors: avaliableEditors, editornames: editornames });
   }
 
   async componentDidMount() {
@@ -103,7 +113,7 @@ export default class ListsScreen1 extends Component {
 
   onSelectionsChange = (selectedEditors) => { this.setState({ moreThan2Editors: false, selectedEditors }); }
 
-  async getToAssignList(){ // TODO  等好了换成真实的
+  async getToAssignList() { // TODO  等好了换成真实的
     const url = `${baseUrl}editor/assignlist`;  //真实的.
     try {
       const result = await axios.get(url);
@@ -113,7 +123,7 @@ export default class ListsScreen1 extends Component {
         // console.log(` editors  ${result.data.editors}`);
         // console.log(`come in avaliable`);
 
-        this.setState({toAssignArticles:result.data.assignlist}); // 
+        this.setState({ toAssignArticles: result.data.assignlist.reverse() }); // 
 
       }
     } catch (error) {
@@ -121,7 +131,7 @@ export default class ListsScreen1 extends Component {
     }
   }
 
-  async getAvalEditor(){ 
+  async getAvalEditor() {
     const url = `${baseUrl}chiefeditor/editors`;
     try {
       const result = await axios.get(url);
@@ -153,7 +163,7 @@ export default class ListsScreen1 extends Component {
 
   openAssignModal() {
     console.log('openAssign has been invoked');
-    
+
     this.refs.assignArticle.open();
   }
 
@@ -163,11 +173,11 @@ export default class ListsScreen1 extends Component {
     if (this.state.selectedEditors.length > 2) return
 
     //做一些关于这些被选择的编辑的操作
-    const data={
-      "article":{
-        "articleid":this.state.toAssignArticles[this.state.articleIndex].id,
-        "editor1name":this.state.selectedEditors[0].value||' ',
-        "editor2name":this.state.selectedEditors[1].value||' '
+    const data = {
+      "article": {
+        "articleid": this.state.toAssignArticles[this.state.articleIndex].id,
+        "editor1name": this.state.selectedEditors[0].value || ' ',
+        "editor2name": this.state.selectedEditors[1].value || ' '
       }
     };
     console.log(`articleIndex  ${JSON.stringify(data)}`);
@@ -177,17 +187,17 @@ export default class ListsScreen1 extends Component {
       url: `${baseUrl}chiefeditor/assign`,
       data: data
 
-    }).then(response=>{
+    }).then(response => {
       console.log(`assign res ${JSON.stringify(response.data)}`);
       // console.log(`ultimate  editor ${this.state.selectedEditors[0]}`);
 
       this.setState({ selectedEditors: [], isModalOpen: false })
       this.props.navigation.navigate('Home');
-    }).catch(error=>{
+    }).catch(error => {
       console.log(error);
     });
 
- 
+
   }
 
   closeModalCancel() {
@@ -232,15 +242,16 @@ export default class ListsScreen1 extends Component {
     // const { Author, avatar } = l;
     const navigator = this.props.navigation;
     // console.log(`this.state.isAssignArticles ${this.state.isAssignArticles}`);
-    console.log(`list screen tag ${l.taglist}`);
+    // console.log(`list screen tag ${l.taglist}`);
+    // console.log(`list editorid ${this.props.screenProps.editorID}`);
     const paramToDetail = {
       'title': l.title,
       'author': l.author,
       'body': l.body,
       'articleid': l.id,
       'editorid': this.props.screenProps.editorID,
-      'tagList':l.taglist, // TODO 等拿到文章了就有
-       review:this.reviewed
+      'tagList': l.taglist, // TODO 等拿到文章了就有
+      review: this.reviewed
     };
     return (
       <View key={index} style={{ height: 60, marginHorizontal: 20, marginTop: 10, backgroundColor: 'white', borderRadius: 5 }}>
@@ -248,7 +259,7 @@ export default class ListsScreen1 extends Component {
           <ListItem
             // leftAvatar={{ rounded: true, source: { uri: l.avatar_url } }}
             key={index}
-            onPress={this.state.isAssignArticles ? () => this.setState({ articleIndex:index,isModalOpen: true }) : () => navigator.navigate('ArticleDetail', paramToDetail)}
+            onPress={this.state.isAssignArticles ? () => this.setState({ articleIndex: index, isModalOpen: true }) : () => navigator.navigate('ArticleDetail', paramToDetail)}
             title={l.title}
             subtitle={l.author}
             chevron
@@ -335,7 +346,7 @@ export default class ListsScreen1 extends Component {
               {/* {console.log(`editorid ${this.props.screenProps.editorID}`)} */}
               {/* {this.getReviewList(this.props.screenProps.editorID)} */}
               {!this.state.isAssignArticles && this.renderListCards(this.state.Articles)}
-              {this.state.isAssignArticles && this.renderListCards(this.state.toAssignArticles.reverse())}
+              {this.state.isAssignArticles && this.renderListCards(this.state.toAssignArticles)}
             </ScrollView>
           </View> :
           <Text>Loading...</Text>

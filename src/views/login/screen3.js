@@ -128,6 +128,8 @@ export default class LoginScreen2 extends Component {
       console.log('pwd eq');
       if(password==='admin'){
         this.props.checkChief(true,result.data.editor.id);
+      }else{
+        this.props.checkChief(false,result.data.editor.id);
       }
     this.props.changeLogin();
     }
@@ -224,7 +226,7 @@ export default class LoginScreen2 extends Component {
                     titleStyle={[styles.categoryText, isLoginPage && styles.selectedCategoryText]}
                     title={'Login'}
                   />
-                  <Button
+                  {/* <Button
                     disabled={isLoading}
                     clear
                     activeOpacity={0.7}
@@ -232,7 +234,7 @@ export default class LoginScreen2 extends Component {
                     containerStyle={{ flex: 1 }}
                     titleStyle={[styles.categoryText, isSignUpPage && styles.selectedCategoryText]}
                     title={'Sign up'}
-                  />
+                  /> */}
                 </View>
                 <View style={styles.rowSelector}>
                   <TabSelector selected={isLoginPage} />
