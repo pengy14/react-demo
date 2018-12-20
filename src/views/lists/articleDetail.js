@@ -175,7 +175,7 @@ class articleDetail extends Component {
     // console.log(`this.props.navigation.state.params.tagList  ${this.props.navigation.state.params.tagList}`);
 
 
-    return this.props.navigation.state.params.tagList.length==0?this.state.tagList:this.props.navigation.state.params.tagList;
+    return this.props.navigation.state.params.tagList.length == 0 ? this.state.tagList : this.props.navigation.state.params.tagList;
   }
 
   accept() {
@@ -237,6 +237,7 @@ class articleDetail extends Component {
     }).then(response => {
       // console.log(response.data);
       // this.props.navigation.navigate('Home');
+      // console.log(`this.props.navigation.state.params.reviewArticleIndex  ${this.props.navigation.state.params.reviewArticleIndex}`);
       this.props.navigation.state.params.review();
       this.props.navigation.goBack();
     }).catch(error => {
@@ -263,19 +264,19 @@ class articleDetail extends Component {
     this.setState({ isModalOpen: false });
   }
 
-  renderArticleTag(tag,index) {
+  renderArticleTag(tag, index) {
     // console.log('render single tag');
     console.log(`tag ${tag}`)
     return (
-        <CustomButton title={tag} selected={true}  key={index}/>
+      <CustomButton title={tag} selected={true} key={index} />
     )
   }
 
   renderArticleTagLists() {
     // console.log('rendertaglisets');
-    const tagList=this.defaultTag();
+    const tagList = this.defaultTag();
     return _.map(tagList, (tag, index) => {
-      return this.renderArticleTag(tag,index);
+      return this.renderArticleTag(tag, index);
     })
   }
 
@@ -306,6 +307,12 @@ class articleDetail extends Component {
           <Text>
             {params.body}
           </Text>
+          {params.editor1&&<Text>
+            {`remark: ${params.editor1}  decision:${params.editor1decision}`}
+          </Text>}
+          {params.editor2&&<Text>
+          {`remark: ${params.editor2}  decision:${params.editor2decision}`}
+          </Text>}
         </ScrollView>
 
         <View style={styles.container}>

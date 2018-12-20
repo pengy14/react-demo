@@ -2,8 +2,8 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 685,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "packagerPid": 6605,
+  "expoServerNgrokUrl": "https://4u-583.ivan.react-demo.exp.direct",
+  "packagerNgrokUrl": "https://packager.4u-583.ivan.react-demo.exp.direct",
+  "ngrokPid": 6616
 }

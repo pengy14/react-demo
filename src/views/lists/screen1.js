@@ -76,6 +76,7 @@ export default class ListsScreen1 extends Component {
     console.log(`我被调用了 reviewd`);
 
     const url = `${baseUrl}editor/reviewlist?editorid=${this.props.screenProps.editorID}`;
+    this.setState({Articles:[]});
     axios.get(url)
     .then(response => {
       this.setState({ Articles: response.data.reviewlist, isReviewed: !this.state.isReviewed });
@@ -83,8 +84,6 @@ export default class ListsScreen1 extends Component {
     .catch(error => {
       console.log(error);
     })
-
-
   }
 
   async componentWillMount() {
@@ -153,7 +152,7 @@ export default class ListsScreen1 extends Component {
     try {
       const result = await axios.get(url);
       if (result.data.statuscode === 200) {
-        return result.data.reviewlist;
+        return result.data.reviewlist.reverse();
       }
     } catch (error) {
       console.log(error);
@@ -244,14 +243,28 @@ export default class ListsScreen1 extends Component {
     // console.log(`this.state.isAssignArticles ${this.state.isAssignArticles}`);
     // console.log(`list screen tag ${l.taglist}`);
     // console.log(`list editorid ${this.props.screenProps.editorID}`);
-    const paramToDetail = {
+    const paramToDetail = l.editor1? {
       'title': l.title,
       'author': l.author,
       'body': l.body,
       'articleid': l.id,
       'editorid': this.props.screenProps.editorID,
       'tagList': l.taglist, // TODO 等拿到文章了就有
-      review: this.reviewed
+      review: this.reviewed,
+      'editor1':l.editor1.remark,
+      'editor1decision':l.editor1.decision,
+      'editor2':l.editor2.remark,
+      'editor2decision':l.editor2.decision,
+      'reviewArticleIndex':index
+    }:{
+      'title': l.title,
+      'author': l.author,
+      'body': l.body,
+      'articleid': l.id,
+      'editorid': this.props.screenProps.editorID,
+      'tagList': l.taglist, // TODO 等拿到文章了就有
+      review: this.reviewed,
+      'reviewArticleIndex':index
     };
     return (
       <View key={index} style={{ height: 60, marginHorizontal: 20, marginTop: 10, backgroundColor: 'white', borderRadius: 5 }}>
