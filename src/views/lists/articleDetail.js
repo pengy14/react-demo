@@ -6,6 +6,7 @@ import { Button, ButtonGroup, Input } from 'react-native-elements';
 import autobind from 'class-autobind';
 import Modal from 'react-native-modalbox';
 import _ from 'lodash';
+import Markdown from 'react-native-markdown-renderer';
 
 const axios = require('axios');
 const baseUrl = 'http://45.76.75.242/api/';
@@ -285,7 +286,7 @@ class articleDetail extends Component {
     // console.log(`params ${params.editorid}`);
     return (
       <View style={styles.container}>
-        <View style={{ flex: 0.3, flexDirection: 'row', marginHorizontal: 40, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 0.2, flexDirection: 'row', marginHorizontal: 40, justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ flex: 1, fontSize: 26, color: 'black', fontFamily: 'bold' }}>
             {params.title}
           </Text>
@@ -296,17 +297,17 @@ class articleDetail extends Component {
 
         // TODO
 
-        <View style={{ flex: 0.7, flexDirection: 'column', height: 130, marginLeft: 40, marginRight: 10 }}>
+        <View style={{ flex: 0.5, flexDirection: 'column', height: 130, marginLeft: 40, marginRight: 10 }}>
           <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
             {this.renderArticleTagLists()}
             {/* <CustomButton title={this.state.tagList[0]} selected={true} /> */}
           </View>
         </View>
 
-        <ScrollView style={{ flex: 2, marginBottom: 5, padding: 20 }}>
-          <Text>
+        <ScrollView style={{ flex: 1, marginBottom: 2, padding: 25 }}>
+          <Markdown>
             {params.body}
-          </Text>
+          </Markdown>
           {params.editor1&&<Text>
             {`remark: ${params.editor1}  decision:${params.editor1decision}`}
           </Text>}
@@ -315,11 +316,14 @@ class articleDetail extends Component {
           </Text>}
         </ScrollView>
 
-        <View style={styles.container}>
+        <View style={{flex:0.3}}>
           <View style={[styles.buttonsContainer, { marginBottom: 5 }]}>
             <Button
+              buttonStyle={styles.loginButton}
               title="Review"
-              buttonStyle={{ backgroundColor: 'rgba(127, 220, 103, 1)' }}
+              containerStyle={{marginTop:32,flex:0}}
+              titleStyle={styles.loginTextButton}
+              // buttonStyle={{ backgroundColor: 'rgba(127, 220, 103, 1)' }}
               containerStyle={{ height: 40 }}
               titleStyle={{ color: 'white', marginHorizontal: 20 }}
               onPress={this.openCommentModal}
@@ -379,6 +383,17 @@ const styles = StyleSheet.create({
   },
   modal4: {
     height: 400
+  },
+  loginButton: {
+    backgroundColor: 'rgba(232, 147, 142, 1)',
+    borderRadius: 10,
+    height: 50,
+    width: 200,
+  },
+  loginTextButton: {
+    fontSize: 16,
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 
